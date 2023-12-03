@@ -1,26 +1,33 @@
 import express from 'express';
-import { MongoClient } from 'mongodb';
 import 'dotenv/config';
 
 import userRouter from './routes/userRouter';
 import urlRoutes from './routes/urlRoutes';
+import { Db } from 'mongodb';
+import getDatabaseConnection from './db';
 
-const app = express();
-const port = process.env.PORT;
+(async () => {
+    try {
+        const app = express();
+        const port = process.env.PORT;
 
-app.use(express.json());
+        app.use(express.json());
 
-app.use('/api/url', urlRoutes);
-app.use('/api/user', userRouter);
+        app.use('/api/url', urlRoutes);
+        app.use('/api/user', userRouter);
 
-// const client = new MongoClient(process.env.MONGODB);
-// client.connect();
-// const collection = client.db('test').collection('people');
+        app.set('db', await getDatabaseConnection(process.env.MONGODB));
 
-app.get('/', (req, res) => res.status(200).send('DEFAULT ROUTE'));
+        app.get('/api', async (req, res) => {
+            const db = app.get('db') as Db;
+            const doc = await db.collection('shortened_urls').findOne({}, { projection: { _id: 0 } });
+            res.status(200).json(doc);
+        });
 
-app.listen(port, () => {
-    console.log(`Example app listening on http://localhost/${port}`);
-});
-
-console.log();
+        app.listen(port, () => {
+            console.log(`Example app listening on http://localhost/${port}`);
+        });
+    } catch {
+        console.log('server brokey');
+    }
+})();
