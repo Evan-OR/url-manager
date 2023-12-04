@@ -1,16 +1,16 @@
-@use '../../utils/globals.scss' as g;
+@use '../../styles/globals.scss' as *;
 
 .wrapper {
     width: 380px;
     padding: 45px;
 
-    border: solid white 2px;
-    border-radius: 6px;
+    border: solid $primary 2px;
+    border-radius: 10px;
 
     .title {
         text-align: center;
         margin-top: 0;
-        color: g.$primary;
+        color: $primary;
     }
 
     .form {
@@ -25,24 +25,30 @@
             margin: 8px 0;
             display: inline-block;
 
-            border: solid 1px #ffffff00;
+            border: solid 2px $bg-color;
             border-radius: 4px;
 
             font-size: 1rem;
         }
+        .input input::placeholder {
+            opacity: 1;
+        }
 
         .btn {
             border: none;
-            background-color: g.$primary;
-            color: g.$bg-color;
+            background-color: $primary;
+            color: $bg-color;
 
             font-weight: bold;
 
             cursor: pointer;
         }
+        .formErrorBorder {
+            border: solid $red 2px;
+        }
+        .formErrorMessage {
+            width: 100%;
+            color: $red;
+        }
     }
-}
-
-.formError {
-    border: solid red 1px;
 }
