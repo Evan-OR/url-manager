@@ -3,7 +3,9 @@ import userController from '../controllers/userController';
 
 const userRouter = Router();
 
-userRouter.post('/create', userController.createUser);
+userRouter.post('/register', userController.register);
+
+userRouter.post('/login', userController.login);
 
 userRouter.get('/:id', userController.getUserById);
 
