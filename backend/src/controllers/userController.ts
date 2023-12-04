@@ -3,6 +3,7 @@ import { Collection, MongoServerError } from 'mongodb';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/userModel';
+import { registrationValidation } from '../utils/utils';
 
 const getUserById = async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -14,6 +15,10 @@ const register = async (req: Request, res: Response) => {
     const saltRounds = 10;
 
     try {
+        const errors = registrationValidation(username, email, password);
+        if (Object.keys(errors).length > 0)
+            return res.status(401).json({ message: 'Invalid Registration Credentials', errors });
+
         const salt = await bcrypt.genSalt(saltRounds);
         const hashedPassword = await bcrypt.hash(password, salt);
 
