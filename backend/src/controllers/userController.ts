@@ -30,11 +30,11 @@ const register = async (req: Request, res: Response) => {
 
         user._id = result.insertedId;
 
-        const token = jwt.sign({ username: user.username, email: user.email }, process.env.SECRET, {
+        const token = jwt.sign({ id: user._id, username: user.username, email: user.email }, process.env.SECRET, {
             algorithm: 'HS512',
         });
 
-        res.status(200).json({ token, user });
+        res.status(200).json({ token });
     } catch (error) {
         if (error instanceof MongoServerError) {
             const err = error as MongoServerError;
@@ -56,8 +56,10 @@ const login = async (req: Request, res: Response) => {
 
         if (!validCredentials || user === null) return res.status(401).json({ message: 'Invalid Login Credentials' });
 
-        const token = jwt.sign(user, process.env.SECRET, { algorithm: 'HS512' });
-        res.status(200).json({ token, username: user.username, email: user.email });
+        const token = jwt.sign({ id: user._id, username: user.username, email: user.email }, process.env.SECRET, {
+            algorithm: 'HS512',
+        });
+        res.status(200).json({ token });
     } catch (error) {
         if (error instanceof TypeError) return res.status(401).json({ message: 'Invalid Login Credentials' });
         console.log(error);
