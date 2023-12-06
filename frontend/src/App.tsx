@@ -7,6 +7,7 @@ import { User } from './utils/types';
 import HomePage from './components/HomePage/HomePage';
 import ManageUrls from './components/ManageUrls/ManageUrls';
 import URLAnalytics from './components/URLAnalytics/URLAnalytics';
+import NotFoundPage from './components/NotFoundPage/404Page';
 
 function App() {
     const [data, setData] = useState(null);
@@ -30,6 +31,7 @@ function App() {
             <Route path="/auth" element={<RegisterForm setUser={setUser} />} />
             <Route path="/manage" element={<ManageUrls />} />
             <Route path="/analytics" element={<URLAnalytics />} />
+            <Route path="*" element={<NotFoundPage />} />
         </Routes>
     );
     // return (
