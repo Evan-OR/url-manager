@@ -3,6 +3,7 @@ import { Collection, MongoServerError } from 'mongodb';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/userModel';
+import { registrationValidation } from '../utils/utils';
 
 const getUserById = async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -14,6 +15,10 @@ const register = async (req: Request, res: Response) => {
     const saltRounds = 10;
 
     try {
+        const errors = registrationValidation(username, email, password);
+        if (Object.keys(errors).length > 0)
+            return res.status(401).json({ message: 'Invalid Registration Credentials', errors });
+
         const salt = await bcrypt.genSalt(saltRounds);
         const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -30,9 +35,9 @@ const register = async (req: Request, res: Response) => {
 
         user._id = result.insertedId;
 
-        const token = jwt.sign(user, process.env.SECRET, { algorithm: 'HS512' });
+        const tokenAndUserInfo = generateAuthToken(user);
 
-        res.status(200).json({ token, user });
+        res.status(200).json(tokenAndUserInfo);
     } catch (error) {
         if (error instanceof MongoServerError) {
             const err = error as MongoServerError;
@@ -52,15 +57,27 @@ const login = async (req: Request, res: Response) => {
 
         const validCredentials = await bcrypt.compare(password, user.password);
 
-        if (!validCredentials || user === null) return res.status(401).json({ message: 'Invalid Login Credentials' });
+        if (!validCredentials || user === null) throw new TypeError();
 
-        const token = jwt.sign(user, process.env.SECRET, { algorithm: 'HS512' });
-        res.status(200).json({ token, id: user._id, username: user.username, email: user.email });
+        const tokenAndUserInfo = generateAuthToken(user);
+
+        res.status(200).json(tokenAndUserInfo);
     } catch (error) {
-        if (error instanceof TypeError) return res.status(401).json({ message: 'Invalid Login Credentials' });
+        if (error instanceof TypeError)
+            return res
+                .status(401)
+                .json({ message: 'Invalid Login Credentials', errors: { password: 'Invalid Login Credentials' } });
         console.log(error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
+};
+
+const generateAuthToken = (user: User) => {
+    const token = jwt.sign({ id: user._id, username: user.username, email: user.email }, process.env.SECRET, {
+        algorithm: 'HS512',
+    });
+
+    return { token, user: { username: user.username, email: user.email } };
 };
 
 export default { getUserById, register, login };
