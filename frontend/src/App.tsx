@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RegisterForm from './components/RegisterForm/RegisterForm';
+import Cookies from 'js-cookie';
+import { User } from './utils/types';
 
 function App() {
     const [data, setData] = useState(null);
+    const [user, setUser] = useState<User>();
 
     const getData = async () => {
         const res = await fetch('/api');
@@ -10,12 +13,24 @@ function App() {
         setData(json);
     };
 
+    useEffect(() => {
+        if (Cookies.get('jwt')) {
+            console.log('user Should be logged in');
+        }
+    }, []);
+
     return (
         <>
-            <button onClick={getData}>Get Data</button>
-            {data && <div>{JSON.stringify(data)}</div>}
+            {user ? (
+                <div>helle {user.username}</div>
+            ) : (
+                <>
+                    <button onClick={getData}>Get Data</button>
+                    {data && <div>{JSON.stringify(data)}</div>}
 
-            <RegisterForm />
+                    <RegisterForm setUser={setUser} />
+                </>
+            )}
         </>
     );
 }

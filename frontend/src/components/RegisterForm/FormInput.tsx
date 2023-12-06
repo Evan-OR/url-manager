@@ -1,28 +1,31 @@
 import style from './registerFrom.module.scss';
 
 type FormInputProps = {
-    type: 'text' | 'password';
+    inputType: 'text' | 'password';
+    formType: 'Register' | 'Login';
     placeHolder: string;
-    passwordError: boolean;
-    passwordRef: React.RefObject<HTMLInputElement>;
+    error: boolean;
+    inputRef: React.RefObject<HTMLInputElement>;
     errorMessage: string | undefined;
+    name: string;
     setPasswordError: (value: boolean) => void;
 };
 
 function FormInput(props: FormInputProps) {
-    const { type, placeHolder, passwordError, passwordRef, errorMessage, setPasswordError } = props;
+    const { inputType, formType, placeHolder, error, inputRef, errorMessage, name, setPasswordError } = props;
     // const passwordRef = useRef<HTMLInputElement>(null);
 
     return (
         <>
             <input
-                className={`${style.input} ${passwordError ? style.formErrorBorder : ''}`}
-                ref={passwordRef}
-                type={type}
+                className={`${style.input} ${error && formType === 'Register' ? style.formErrorBorder : ''}`}
+                ref={inputRef}
+                type={inputType}
                 placeholder={placeHolder}
                 onChange={() => setPasswordError(false)}
+                name={name}
             ></input>
-            {passwordError && <div className={style.formErrorMessage}>{errorMessage}</div>}
+            {error && <div className={style.formErrorMessage}>{errorMessage}</div>}
         </>
     );
 }

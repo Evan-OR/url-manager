@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import style from './registerFrom.module.scss';
 import FormInput from './FormInput';
+import Cookies from 'js-cookie';
+import { User } from '../../utils/types';
+import FormToggle from './FormToggle';
 
 type RegistrationErrors = {
     username?: string;
@@ -8,10 +11,20 @@ type RegistrationErrors = {
     password?: string;
 };
 
-function RegisterForm() {
+type FormType = 'Register' | 'Login';
+
+type RegisterFormProps = {
+    setUser: (value: User) => void;
+};
+
+function RegisterForm(props: RegisterFormProps) {
+    const { setUser } = props;
+
     const usernameRef = useRef<HTMLInputElement>(null);
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
+
+    const [formType, setFormType] = useState<FormType>('Register');
 
     const [errors, setErrors] = useState<RegistrationErrors>({});
     const [usernameError, setUsernameError] = useState(false);
@@ -20,25 +33,30 @@ function RegisterForm() {
 
     const [disableSubmitButton, setDisableSubmitButton] = useState(false);
 
-    const register = async (e: React.FormEvent<HTMLFormElement>) => {
+    const requestHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setDisableSubmitButton(true);
 
-        if (!usernameRef.current || !emailRef.current || !passwordRef.current) {
+        if (!emailRef.current || !passwordRef.current || (formType === 'Register' && !usernameRef.current)) {
             console.log('null ref found');
             return;
         }
 
-        const res = await fetch('/api/user/register', {
+        const postData: { email: string; password: string; username?: string } = {
+            email: emailRef.current.value,
+            password: passwordRef.current.value,
+        };
+
+        if (formType === 'Register' && usernameRef.current) {
+            postData.username = usernameRef.current.value;
+        }
+
+        const res = await fetch(`/api/user/${formType.toLocaleLowerCase()}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                username: usernameRef.current.value,
-                email: emailRef.current.value,
-                password: passwordRef.current.value,
-            }),
+            body: JSON.stringify(postData),
         });
 
         const json = await res.json();
@@ -46,7 +64,14 @@ function RegisterForm() {
         if (json.hasOwnProperty('errors')) setErrors(json['errors']);
 
         console.log(json);
+
+        Cookies.set('jwt', json.token);
+        setUser(json.user);
         setDisableSubmitButton(false);
+    };
+
+    const toggleFormType = () => {
+        formType === 'Register' ? setFormType('Login') : setFormType('Register');
     };
 
     useEffect(() => {
@@ -57,38 +82,52 @@ function RegisterForm() {
 
     return (
         <div className={style.wrapper}>
-            <h1 className={style.title}>Register</h1>
+            <h1 className={style.title}>{formType}</h1>
 
-            <form className={style.form} onSubmit={register}>
+            <form className={style.form} onSubmit={requestHandler}>
+                {formType === 'Register' && (
+                    <FormInput
+                        inputType={'text'}
+                        formType={formType}
+                        placeHolder={'Username'}
+                        error={usernameError}
+                        inputRef={usernameRef}
+                        errorMessage={errors.username}
+                        name="username"
+                        setPasswordError={setUsernameError}
+                    />
+                )}
                 <FormInput
-                    type={'text'}
-                    placeHolder={'Username'}
-                    passwordError={usernameError}
-                    passwordRef={usernameRef}
-                    errorMessage={errors.username}
-                    setPasswordError={setUsernameError}
-                />
-                <FormInput
-                    type={'text'}
+                    inputType={'text'}
+                    formType={formType}
                     placeHolder={'Email'}
-                    passwordError={emailError}
-                    passwordRef={emailRef}
+                    error={emailError}
+                    inputRef={emailRef}
                     errorMessage={errors.email}
+                    name="email"
                     setPasswordError={setEmailError}
                 />
                 <FormInput
-                    type={'password'}
+                    inputType={'password'}
+                    formType={formType}
                     placeHolder={'Password'}
-                    passwordError={passwordError}
-                    passwordRef={passwordRef}
+                    error={passwordError}
+                    inputRef={passwordRef}
                     errorMessage={errors.password}
+                    name="password"
                     setPasswordError={setPasswordError}
                 />
 
                 <button disabled={disableSubmitButton} className={style.btn} type="submit">
-                    Register
+                    {formType}
                 </button>
             </form>
+
+            {formType === 'Register' ? (
+                <FormToggle text="Already have an account?" btnText="Login" toggleFormType={toggleFormType} />
+            ) : (
+                <FormToggle text="Don't have an account?" btnText="Register" toggleFormType={toggleFormType} />
+            )}
         </div>
     );
 }

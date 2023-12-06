@@ -51,4 +51,16 @@
             color: $red;
         }
     }
+
+    .formToggle {
+        user-select: none;
+        width: 100%;
+        text-align: center;
+
+        .link {
+            color: $primary;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    }
 }
