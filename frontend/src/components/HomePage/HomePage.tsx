@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
+import URLInput from './URLInput';
 
 function HomePage() {
     return (
-        <div>
-            HomePage
+        <>
+            <h2>HomePage</h2>
+            <URLInput />
             <div>
                 <Link to={'/auth'}>Login/Register</Link>
             </div>
@@ -13,7 +15,7 @@ function HomePage() {
             <div>
                 <Link to={'/analytics'}>See URL Analytics</Link>
             </div>
-        </div>
+        </>
     );
 }
 
