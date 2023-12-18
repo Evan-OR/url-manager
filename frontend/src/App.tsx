@@ -34,20 +34,6 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
         </Routes>
     );
-    // return (
-    //     <>
-    //         {user ? (
-    //             <div>helle {user.username}</div>
-    //         ) : (
-    //             <>
-    //                 <button onClick={getData}>Get Data</button>
-    //                 {data && <div>{JSON.stringify(data)}</div>}
-
-    //                 <RegisterForm setUser={setUser} />
-    //             </>
-    //         )}
-    //     </>
-    // );
 }
 
 export default App;

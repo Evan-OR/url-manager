@@ -27,11 +27,6 @@ import authenticateUser from './middlewares/authMiddleware';
             res.status(200).json(doc);
         });
 
-        app.get('/protected', authenticateUser, async (req, res) => {
-            const user = req.app.get('user');
-            res.status(200).send(user);
-        });
-
         app.listen(port, () => {
             console.log(`Example app listening on http://localhost/${port}`);
         });
