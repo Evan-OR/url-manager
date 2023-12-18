@@ -1,41 +1,48 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import RegisterForm from './components/RegisterForm/RegisterForm';
 import Cookies from 'js-cookie';
-import { User } from './utils/types';
 import HomePage from './components/HomePage/HomePage';
 import ManageUrls from './components/ManageUrls/ManageUrls';
 import URLAnalytics from './components/URLAnalytics/URLAnalytics';
 import NotFoundPage from './components/NotFoundPage/404Page';
-import { UserContextProvider } from './context/UserContext';
+import { UserContext } from './context/UserContext';
 
 function App() {
-    const [data, setData] = useState(null);
-    const [user, setUser] = useState<User>();
+    const userContext = useContext(UserContext);
 
-    const getData = async () => {
-        const res = await fetch('/api');
-        const json = await res.json();
-        setData(json);
+    const autoLogin = async (token: string) => {
+        try {
+            const res = await fetch('api/user/login/auto', {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            const json = await res.json();
+            userContext.setUser({ id: json.user.id, username: json.user.username, email: json.user.email });
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     useEffect(() => {
-        if (Cookies.get('jwt')) {
-            console.log('user Should be logged in');
+        const token = Cookies.get('jwt');
+        if (token && userContext.user === null) {
+            autoLogin(token);
         }
     }, []);
 
     return (
-        <UserContextProvider>
-            <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/auth" element={<RegisterForm />} />
-                <Route path="/manage" element={<ManageUrls />} />
-                <Route path="/analytics" element={<URLAnalytics />} />
-                <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-        </UserContextProvider>
+        <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/auth" element={<RegisterForm />} />
+            <Route path="/manage" element={<ManageUrls />} />
+            <Route path="/analytics" element={<URLAnalytics />} />
+            <Route path="*" element={<NotFoundPage />} />
+        </Routes>
     );
 }
 

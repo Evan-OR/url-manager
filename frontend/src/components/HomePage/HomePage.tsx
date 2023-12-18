@@ -17,6 +17,7 @@ function HomePage() {
         });
 
         const json = await res.json();
+        console.log(json);
         setData(json);
     };
 
