@@ -1,8 +1,10 @@
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
 import style from './urlInput.module.scss';
+import { UserContext } from '../../context/UserContext';
 
 function URLInput() {
     const URLInputRef = useRef<HTMLInputElement>(null);
+    const userContxet = useContext(UserContext);
 
     const shortenURL = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -19,6 +21,8 @@ function URLInput() {
             return;
         }
 
+        const created_by = userContxet.user ? userContxet.user.email : 'Anonymous';
+
         const res = await fetch(`/api/url/shorten`, {
             method: 'POST',
             headers: {
@@ -26,7 +30,7 @@ function URLInput() {
             },
             body: JSON.stringify({
                 original_url: url,
-                created_by: 'Anonymous',
+                created_by: created_by,
             }),
         });
         const json = await res.json();
