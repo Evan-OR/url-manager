@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import style from './registerFrom.module.scss';
 import FormInput from './FormInput';
 import Cookies from 'js-cookie';
-import { User } from '../../utils/types';
 import FormToggle from './FormToggle';
+import { UserContext } from '../../context/UserContext';
 
 type RegistrationErrors = {
     username?: string;
@@ -13,12 +13,8 @@ type RegistrationErrors = {
 
 type FormType = 'Register' | 'Login';
 
-type RegisterFormProps = {
-    setUser: (value: User) => void;
-};
-
-function RegisterForm(props: RegisterFormProps) {
-    const { setUser } = props;
+function RegisterForm() {
+    const userContext = useContext(UserContext);
 
     const usernameRef = useRef<HTMLInputElement>(null);
     const emailRef = useRef<HTMLInputElement>(null);
@@ -66,7 +62,7 @@ function RegisterForm(props: RegisterFormProps) {
         console.log(json);
 
         Cookies.set('jwt', json.token);
-        setUser(json.user);
+        userContext?.setUser(json.user);
         setDisableSubmitButton(false);
     };
 

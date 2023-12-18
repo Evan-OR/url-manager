@@ -8,6 +8,7 @@ import HomePage from './components/HomePage/HomePage';
 import ManageUrls from './components/ManageUrls/ManageUrls';
 import URLAnalytics from './components/URLAnalytics/URLAnalytics';
 import NotFoundPage from './components/NotFoundPage/404Page';
+import { UserContextProvider } from './context/UserContext';
 
 function App() {
     const [data, setData] = useState(null);
@@ -26,13 +27,15 @@ function App() {
     }, []);
 
     return (
-        <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/auth" element={<RegisterForm setUser={setUser} />} />
-            <Route path="/manage" element={<ManageUrls />} />
-            <Route path="/analytics" element={<URLAnalytics />} />
-            <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+        <UserContextProvider>
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/auth" element={<RegisterForm />} />
+                <Route path="/manage" element={<ManageUrls />} />
+                <Route path="/analytics" element={<URLAnalytics />} />
+                <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+        </UserContextProvider>
     );
 }
 
