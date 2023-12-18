@@ -1,0 +1,38 @@
+@use '../../styles/globals.scss' as *;
+
+$fontSize: 1.2rem;
+
+.inputWrapper {
+    display: flex;
+
+    .input {
+        width: 100%;
+        padding: 12px 14px;
+        margin: 8px 0;
+        display: inline-block;
+        min-width: 460px;
+
+        border: solid 0px $bg-color;
+        border-radius: 4px 0 0 4px;
+
+        font-size: $fontSize;
+
+        &:focus {
+            outline: none;
+        }
+    }
+    .submitBtn {
+        background-color: $primary;
+
+        font-size: $fontSize;
+        border-radius: 0 4px 4px 0;
+        border: solid white 0px;
+        outline: none;
+        margin: 8px 0;
+        padding: 0 14px;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}

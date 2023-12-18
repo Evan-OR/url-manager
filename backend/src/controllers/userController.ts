@@ -72,12 +72,17 @@ const login = async (req: Request, res: Response) => {
     }
 };
 
+const protectedRoute = async (req, res) => {
+    const user = req.app.get('user');
+    res.status(200).json({ message: 'You are authorized', user: user });
+};
+
 const generateAuthToken = (user: User) => {
     const token = jwt.sign({ id: user._id, username: user.username, email: user.email }, process.env.SECRET, {
         algorithm: 'HS512',
     });
 
-    return { token, user: { username: user.username, email: user.email } };
+    return { token, user: { id: user._id, username: user.username, email: user.email } };
 };
 
-export default { getUserById, register, login };
+export default { getUserById, register, login, protectedRoute };
