@@ -1,14 +1,15 @@
 import { Link } from 'react-router-dom';
 import URLInput from './URLInput';
 import Cookies from 'js-cookie';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { UserContext } from '../../context/UserContext';
 
 function HomePage() {
     const userContext = useContext(UserContext);
+    const [data, setData] = useState<[]>([]);
 
-    const checkUserValidation = async () => {
-        const res = await fetch('api/user/protected', {
+    const getShortenedURLs = async () => {
+        const res = await fetch(`api/urls`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${Cookies.get('jwt')}`,
@@ -16,7 +17,7 @@ function HomePage() {
         });
 
         const json = await res.json();
-        console.log(json);
+        setData(json);
     };
 
     const logout = () => {
@@ -44,7 +45,7 @@ function HomePage() {
                 <Link to={'/analytics'}>See URL Analytics</Link>
             </div>
 
-            <button onClick={checkUserValidation}>Check User Validation</button>
+            <button onClick={getShortenedURLs}>Get User's Shortened Urls</button>
             <button onClick={logout}>Log Out</button>
         </>
     );

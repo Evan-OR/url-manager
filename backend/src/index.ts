@@ -2,10 +2,10 @@ import express from 'express';
 import 'dotenv/config';
 
 import userRouter from './routes/userRouter';
-import urlRoutes from './routes/urlRoutes';
+import urlRoutes from './routes/urlRouter';
 import { Db } from 'mongodb';
 import getDatabaseConnection from './db';
-import authenticateUser from './middlewares/authMiddleware';
+import urlsRouter from './routes/urlsRouter';
 
 (async () => {
     try {
@@ -15,6 +15,7 @@ import authenticateUser from './middlewares/authMiddleware';
         app.use(express.json());
 
         app.use('/api/url', urlRoutes);
+        app.use('/api/urls', urlsRouter);
         app.use('/api/user', userRouter);
 
         const { usersCollection, urlsCollection } = await getDatabaseConnection(process.env.MONGODB);
