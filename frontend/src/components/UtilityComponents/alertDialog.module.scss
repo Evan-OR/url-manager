@@ -1,0 +1,58 @@
+@use '../../styles/globals.scss' as *;
+
+$dialog-border-radius: 10px;
+
+.dialogWrapper {
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+
+    .contentWrapper {
+        display: flex;
+        background-color: $bg-color;
+        box-shadow: 1px 1px 20px rgba(255, 255, 255, 0.1);
+        border-radius: $dialog-border-radius;
+
+        .column {
+            width: 10px;
+            background-color: $red;
+            border-radius: $dialog-border-radius 0 0 $dialog-border-radius;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+
+            .titleWrapper {
+                display: flex;
+                align-items: center;
+                .icon {
+                    width: 32px;
+                    height: 32px;
+                    fill: $red;
+                }
+                .title {
+                    margin: 0;
+                    margin-left: 10px;
+                }
+            }
+
+            .text {
+            }
+        }
+
+        .form {
+            .btn {
+                @include button();
+            }
+        }
+    }
+
+    &:focus {
+        outline: none;
+    }
+    &::backdrop {
+        background-color: black;
+        opacity: 0.2;
+    }
+}

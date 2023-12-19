@@ -72,6 +72,11 @@ const login = async (req: Request, res: Response) => {
     }
 };
 
+const autoLogin = async (req: Request, res: Response) => {
+    const user = req.app.get('user');
+    res.status(200).json({ message: 'Auto Login Successful', user: user });
+};
+
 const protectedRoute = async (req, res) => {
     const user = req.app.get('user');
     res.status(200).json({ message: 'You are authorized', user: user });
@@ -85,4 +90,4 @@ const generateAuthToken = (user: User) => {
     return { token, user: { id: user._id, username: user.username, email: user.email } };
 };
 
-export default { getUserById, register, login, protectedRoute };
+export default { getUserById, register, login, autoLogin, protectedRoute };

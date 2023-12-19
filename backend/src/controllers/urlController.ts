@@ -9,9 +9,8 @@ const getUrlByCode = async (req: Request, res: Response) => {
 };
 
 const shortenURL = async (req: Request, res: Response) => {
-    const { original_url } = req.body;
+    const { original_url, created_by } = req.body;
     const urlsCollection = req.app.get('urlsCollection') as Collection<URLModel>;
-    const created_by = req.app.get('user')?.email === undefined ? 'Anonymous' : req.app.get('user').email;
 
     try {
         new URL(original_url); // Validate URL

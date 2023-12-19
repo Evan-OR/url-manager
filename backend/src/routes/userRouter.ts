@@ -8,6 +8,8 @@ userRouter.post('/register', userController.register);
 
 userRouter.post('/login', userController.login);
 
+userRouter.get('/login/auto', authenticateUser, userController.autoLogin);
+
 userRouter.get('/protected', authenticateUser, userController.protectedRoute);
 
 userRouter.get('/:id', userController.getUserById);
