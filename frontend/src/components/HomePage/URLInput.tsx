@@ -42,12 +42,6 @@ function URLInput() {
 
             console.log(await res.json());
         } catch (error) {
-            let errorMessage = 'Sever Error';
-
-            if (error instanceof Error) {
-                errorMessage = error.message;
-            }
-
             openDialog();
         } finally {
             setDisabled(false);
