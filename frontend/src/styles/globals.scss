@@ -1,3 +1,17 @@
 $primary: #ff9191;
 $bg-color: #242424;
 $red: #d14848;
+
+@mixin button() {
+    background-color: rgba(255, 255, 255, 0);
+    font-size: 1.1rem;
+    padding: 10px 15px;
+
+    border: solid 1px white;
+    border-radius: 20px;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+    }
+}
