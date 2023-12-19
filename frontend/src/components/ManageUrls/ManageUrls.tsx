@@ -7,7 +7,7 @@ function ManageUrls() {
     const [data, setData] = useState<[]>([]);
 
     const getShortenedURLs = async () => {
-        const res = await fetch(`api/urls`, {
+        const res = await fetch(`/api/urls`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${Cookies.get('jwt')}`,

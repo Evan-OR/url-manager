@@ -2,8 +2,21 @@ import { useContext, useRef, useState } from 'react';
 import style from './urlInput.module.scss';
 import { UserContext } from '../../context/UserContext';
 import AlertDialog from '../UtilityComponents/AlertDialog';
+import { useNavigate } from 'react-router-dom';
+
+type ShortenURLResponse = {
+    message: string;
+    shortened_url: {
+        original_url: string;
+        code: string;
+        created_by: string;
+        created_at: string;
+    };
+};
 
 function URLInput() {
+    const navigate = useNavigate();
+
     const URLInputRef = useRef<HTMLInputElement>(null);
     const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -40,14 +53,9 @@ function URLInput() {
                 throw new Error(json.message);
             }
 
-            console.log(await res.json());
+            const data: ShortenURLResponse = await res.json();
+            navigate(`/url/${data.shortened_url.code}`);
         } catch (error) {
-            let errorMessage = 'Sever Error';
-
-            if (error instanceof Error) {
-                errorMessage = error.message;
-            }
-
             openDialog();
         } finally {
             setDisabled(false);

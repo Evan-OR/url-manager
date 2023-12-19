@@ -8,13 +8,14 @@ import ManageUrls from './components/ManageUrls/ManageUrls';
 import URLAnalytics from './components/URLAnalytics/URLAnalytics';
 import NotFoundPage from './components/NotFoundPage/404Page';
 import { UserContext } from './context/UserContext';
+import CreatedLinkDisplay from './components/CreatedLinkDisplay/CreatedLinkDisplay';
 
 function App() {
     const userContext = useContext(UserContext);
 
     const autoLogin = async (token: string) => {
         try {
-            const res = await fetch('api/user/login/auto', {
+            const res = await fetch('/api/user/login/auto', {
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -41,6 +42,7 @@ function App() {
             <Route path="/auth" element={<RegisterForm />} />
             <Route path="/manage" element={<ManageUrls />} />
             <Route path="/analytics" element={<URLAnalytics />} />
+            <Route path="/url/:urlCode" element={<CreatedLinkDisplay />} />
             <Route path="*" element={<NotFoundPage />} />
         </Routes>
     );

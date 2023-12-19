@@ -5,7 +5,19 @@ import URLModel from '../models/urlModel';
 
 const getUrlByCode = async (req: Request, res: Response) => {
     const { code } = req.params;
-    res.status(200).json({ message: `Getting url by code ${code}` });
+
+    try {
+        const urlsCollection = req.app.get('urlsCollection') as Collection<URLModel>;
+
+        const result = await urlsCollection.findOne({ code: code });
+
+        if (!result) return res.status(404).json({ message: `URL not found` });
+
+        return res.status(200).json({ url: result });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: `Server Error` });
+    }
 };
 
 const shortenURL = async (req: Request, res: Response) => {
@@ -27,12 +39,16 @@ const shortenURL = async (req: Request, res: Response) => {
         };
         const res2 = await urlsCollection.insertOne(doc);
         if (!res2.acknowledged) throw new Error();
+
+        doc._id = res2.insertedId;
+        res.status(200).json({
+            message: `${created_by} creating shortened url for ${original_url}`,
+            shortened_url: doc,
+        });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: `Server Error` });
     }
-
-    res.status(200).json({ message: `${created_by} creating shortened url for ${original_url}` });
 };
 
 const generateShortCode = async (urlsCollection: Collection<URLModel>) => {
