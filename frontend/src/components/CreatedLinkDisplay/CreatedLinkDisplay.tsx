@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 function CreatedLinkDisplay() {
     const { urlCode } = useParams<{ urlCode: string }>();
+    const [urlData, setUrlData] = useState(null);
 
     const getUrlData = async () => {
         const res = await fetch(`/api/url/${urlCode}`, {
@@ -10,7 +11,7 @@ function CreatedLinkDisplay() {
         });
         const json = await res.json();
 
-        console.log(json);
+        setUrlData(json);
     };
 
     useEffect(() => {
@@ -20,7 +21,9 @@ function CreatedLinkDisplay() {
     return (
         <>
             <div>CreatedLinkDisplay {urlCode}</div>
-            <button onClick={getUrlData}>CLICK</button>
+            <div style={{ width: '100%' }}>
+                <pre>{JSON.stringify(urlData, null, 4)}</pre>
+            </div>
         </>
     );
 }
