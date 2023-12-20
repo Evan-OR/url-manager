@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { UserContext } from '../../context/UserContext';
+import NavBar from '../NavBar/NavBar';
 
 function ManageUrls() {
     const userContext = useContext(UserContext);
@@ -25,6 +26,7 @@ function ManageUrls() {
 
     return (
         <>
+            <NavBar />
             <div>ManageUrls</div>
             {userContext.user && (
                 <>
