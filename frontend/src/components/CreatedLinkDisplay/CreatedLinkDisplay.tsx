@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import NavBar from '../NavBar/NavBar';
 
 function CreatedLinkDisplay() {
     const { urlCode } = useParams<{ urlCode: string }>();
@@ -20,6 +21,7 @@ function CreatedLinkDisplay() {
 
     return (
         <>
+            <NavBar />
             <div>CreatedLinkDisplay {urlCode}</div>
             <div style={{ width: '100%' }}>
                 <pre>{JSON.stringify(urlData, null, 4)}</pre>

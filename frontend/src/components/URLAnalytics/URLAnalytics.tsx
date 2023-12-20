@@ -1,7 +1,12 @@
-import React from 'react';
+import NavBar from '../NavBar/NavBar';
 
 function URLAnalytics() {
-    return <div>URLAnalytics</div>;
+    return (
+        <>
+            <NavBar />
+            <div>URLAnalytics</div>
+        </>
+    );
 }
 
 export default URLAnalytics;

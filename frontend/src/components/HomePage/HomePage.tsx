@@ -3,6 +3,7 @@ import URLInput from './URLInput';
 import Cookies from 'js-cookie';
 import { useContext } from 'react';
 import { UserContext } from '../../context/UserContext';
+import NavBar from '../NavBar/NavBar';
 
 function HomePage() {
     const userContext = useContext(UserContext);
@@ -14,10 +15,9 @@ function HomePage() {
 
     return (
         <>
-            <h2>HomePage</h2>
+            <NavBar />
             {userContext.user && (
                 <>
-                    <h3>Logged in as {userContext.user.username}</h3>
                     <p>{JSON.stringify(userContext.user)}</p>
                 </>
             )}

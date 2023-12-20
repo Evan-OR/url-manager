@@ -1,0 +1,45 @@
+@use '../../styles/globals.scss' as *;
+
+@mixin linkElement {
+    text-decoration: none;
+    color: white;
+
+    padding: 5px 10px;
+    border-bottom: solid 2px transparent;
+}
+
+@mixin sideElements {
+    width: 15%;
+    padding: 0 10px;
+}
+
+.navbarWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+
+    .logo {
+        @include sideElements;
+    }
+
+    .links {
+        display: flex;
+        font-size: 1.2rem;
+
+        .linkElement {
+            @include linkElement;
+        }
+        .linkActive {
+            @include linkElement;
+            color: $primary;
+            border-bottom: solid 2px $primary;
+        }
+    }
+
+    .login {
+        @include sideElements;
+        text-align: right;
+    }
+}
