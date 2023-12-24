@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Shortened Link Redirect</title>
+    </head>
+    <body style="display: flex; flex-direction: column; align-items: center">
+        <h2>Redirecting...</h2>
+        <div>If you aren't being redirected you can manually go to the link <a href="--ORIGINAL_URL--">here</a></div>
+
+        <script>
+            window.location.replace('--ORIGINAL_URL--');
+        </script>
+    </body>
+</html>
