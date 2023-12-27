@@ -48,10 +48,12 @@ function UrlDetailsDisplay({ url }: UrlDetailsDisplayProps) {
     return (
         <details className={style.detailsWrapper}>
             <summary className={style.titleWrapper}>
-                <div className={style.title}>{url.title}</div>
+                <div className={style.title}>
+                    {url.title ? url.title : `Link for ${new URL(url.original_url).hostname}}`}
+                </div>
 
                 <div className={style.titleInfo}>
-                    <div title="Clicks">13K</div>
+                    <div title="Clicks">{Math.round(Math.random() * 50)}K</div>
                     <div className={style.created}>{getTimeSinceCreation(url.date_created)}</div>
                     {/* <EditIcon styleClass={style.icon} /> */}
                     <DeleteIcon styleClass={style.deleteIcon} />
