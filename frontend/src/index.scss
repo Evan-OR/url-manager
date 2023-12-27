@@ -36,3 +36,8 @@ body {
     max-width: 1024px;
     width: 100%;
 }
+
+dialog::backdrop {
+    background-color: black;
+    opacity: 0.3;
+}

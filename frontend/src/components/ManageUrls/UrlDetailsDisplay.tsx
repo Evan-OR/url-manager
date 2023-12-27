@@ -1,5 +1,4 @@
 import DeleteIcon from '../Icons/DeleteIcon';
-// import EditIcon from '../Icons/EditIcon';
 import style from './urlDetailsDisplay.module.scss';
 
 type ShortenedUrl = {
@@ -12,9 +11,10 @@ type ShortenedUrl = {
 };
 type UrlDetailsDisplayProps = {
     url: ShortenedUrl;
+    openDialog: (e: React.MouseEvent<HTMLDivElement>, code: string) => void;
 };
 
-function UrlDetailsDisplay({ url }: UrlDetailsDisplayProps) {
+function UrlDetailsDisplay({ url, openDialog }: UrlDetailsDisplayProps) {
     const getTimeSinceCreation = (date: Date) => {
         date = new Date(date);
         const now = new Date();
@@ -55,8 +55,9 @@ function UrlDetailsDisplay({ url }: UrlDetailsDisplayProps) {
                 <div className={style.titleInfo}>
                     <div title="Clicks">{Math.round(Math.random() * 50)}K</div>
                     <div className={style.created}>{getTimeSinceCreation(url.date_created)}</div>
-                    {/* <EditIcon styleClass={style.icon} /> */}
-                    <DeleteIcon styleClass={style.deleteIcon} />
+                    <div className={style.iconWrapper} onClick={(e) => openDialog(e, url.code)}>
+                        <DeleteIcon styleClass={style.deleteIcon} />
+                    </div>
                 </div>
             </summary>
 

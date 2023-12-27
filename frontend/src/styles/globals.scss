@@ -2,12 +2,15 @@ $primary: #ff9191;
 $bg-color: #242424;
 $red: #d14848;
 
-@mixin button() {
+@mixin button($color: white) {
     background-color: rgba(255, 255, 255, 0);
     font-size: 1.1rem;
     padding: 10px 15px;
+    margin: 2px 5px;
 
-    border: solid 1px white;
+    color: $color;
+
+    border: solid 1px $color;
     border-radius: 20px;
 
     &:hover {
@@ -15,3 +18,5 @@ $red: #d14848;
         cursor: pointer;
     }
 }
+// another button but with an optional colour parameter
+// if no colour is passed, the default colour is used
