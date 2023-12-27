@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import URLInput from './URLInput';
 import Cookies from 'js-cookie';
 import { useContext } from 'react';
@@ -16,21 +15,7 @@ function HomePage() {
     return (
         <>
             <NavBar />
-            {userContext.user && (
-                <>
-                    <p>{JSON.stringify(userContext.user)}</p>
-                </>
-            )}
             <URLInput />
-            <div>
-                <Link to={'/auth'}>Login/Register</Link>
-            </div>
-            <div>
-                <Link to={'/manage'}>Manage My URLs</Link>
-            </div>
-            <div>
-                <Link to={'/analytics'}>See URL Analytics</Link>
-            </div>
 
             <button onClick={logout}>Log Out</button>
         </>
