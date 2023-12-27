@@ -1,0 +1,63 @@
+@use '../../styles/globals.scss' as *;
+
+.copyLink {
+    display: flex;
+    align-items: center;
+
+    border: 2px dashed $primary;
+    padding: 12px 16px;
+    margin: 20px 0;
+
+    cursor: pointer;
+
+    .flipElement {
+        height: 100%;
+        position: relative;
+        width: 200px;
+        overflow: hidden;
+        .link {
+            position: absolute;
+            font-size: 20px;
+        }
+        .clipboard {
+            position: absolute;
+            font-size: 20px;
+            top: 100%;
+        }
+    }
+
+    .icon {
+        fill: $primary;
+        margin: 0 10px;
+        width: 28px;
+        height: 28px;
+    }
+}
+
+.addAnimation {
+    animation: animateMoveUp alternate 2s 1 ease-in-out;
+}
+
+@keyframes animateMoveUp {
+    0% {
+        transform: translateY(0);
+    }
+    15% {
+        transform: translateY(-100%);
+    }
+    85% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.originalUrl {
+    margin: 15px 0;
+
+    .highlight {
+        font-weight: bold;
+        color: $primary;
+    }
+}

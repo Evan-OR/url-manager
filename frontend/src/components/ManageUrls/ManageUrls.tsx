@@ -1,11 +1,20 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { UserContext } from '../../context/UserContext';
 import NavBar from '../NavBar/NavBar';
+import UrlDetailsDisplay from './UrlDetailsDisplay';
+import style from './urlDetailsDisplay.module.scss';
+
+type ShortenedUrl = {
+    _id: string;
+    code: string;
+    original_url: string;
+    creator_email: string;
+    date_created: Date;
+    title: string;
+};
 
 function ManageUrls() {
-    const userContext = useContext(UserContext);
-    const [data, setData] = useState<[]>([]);
+    const [data, setData] = useState<ShortenedUrl[]>([]);
 
     const getShortenedURLs = async () => {
         const res = await fetch(`/api/urls`, {
@@ -27,14 +36,18 @@ function ManageUrls() {
     return (
         <>
             <NavBar />
-            <div>ManageUrls</div>
-            {userContext.user && (
-                <>
-                    <h3>Logged in as {userContext.user.username}</h3>
-                    <p>{JSON.stringify(userContext.user)}</p>
-                </>
-            )}
-            <pre>{JSON.stringify(data, null, 2)}</pre>
+            <div className={style.tableTitles}>
+                <div>Name</div>
+                <div className={style.detailsTitle}>
+                    <div>Total Clicks</div>
+                    <div>Created</div>
+                </div>
+            </div>
+            {data.map((url) => (
+                <UrlDetailsDisplay key={url._id} url={url} />
+            ))}
+
+            {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
         </>
     );
 }
