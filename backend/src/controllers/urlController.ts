@@ -22,9 +22,9 @@ const getUrlByCode = async (req: Request, res: Response) => {
 
 const shortenURL = async (req: Request, res: Response) => {
     const { original_url, created_by } = req.body;
-    const urlsCollection = req.app.get('urlsCollection') as Collection<URLModel>;
 
     try {
+        const urlsCollection = req.app.get('urlsCollection') as Collection<URLModel>;
         new URL(original_url); // Validate URL
 
         const res1 = await urlsCollection.findOne({ original_url: original_url });
@@ -51,6 +51,24 @@ const shortenURL = async (req: Request, res: Response) => {
     }
 };
 
+const deleteURL = async (req: Request, res: Response) => {
+    const { code } = req.params;
+
+    try {
+        const urlsCollection = req.app.get('urlsCollection') as Collection<URLModel>;
+
+        const result = await urlsCollection.deleteOne({ code: code });
+
+        if (result.deletedCount === 0) return res.status(404).json({ message: `URL not found` });
+        if (result.acknowledged === false) return res.status(500).json({ message: `Error deleting URL` });
+
+        return res.status(200).json({ message: `URL deleted` });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: `Server Error` });
+    }
+};
+
 const generateShortCode = async (urlsCollection: Collection<URLModel>) => {
     let count = 0;
     while (true) {
@@ -67,4 +85,4 @@ const generateShortCode = async (urlsCollection: Collection<URLModel>) => {
     }
 };
 
-export default { shortenURL, getUrlByCode };
+export default { shortenURL, getUrlByCode, deleteURL };

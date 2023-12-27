@@ -49,7 +49,7 @@ function UrlDetailsDisplay({ url }: UrlDetailsDisplayProps) {
         <details className={style.detailsWrapper}>
             <summary className={style.titleWrapper}>
                 <div className={style.title}>
-                    {url.title ? url.title : `Link for ${new URL(url.original_url).hostname}}`}
+                    {url.title ? url.title : `Link for ${new URL(url.original_url).hostname}`}
                 </div>
 
                 <div className={style.titleInfo}>
