@@ -2,11 +2,11 @@
 
 $dialog-border-radius: 10px;
 
-.dialogWrapper {
+.dialog {
     border: none;
     background-color: rgba(0, 0, 0, 0);
 
-    .contentWrapper {
+    .dialogWrapper {
         display: flex;
         background-color: $bg-color;
         border-radius: $dialog-border-radius;
@@ -16,11 +16,10 @@ $dialog-border-radius: 10px;
             background-color: $red;
             border-radius: $dialog-border-radius 0 0 $dialog-border-radius;
         }
-
         .content {
             display: flex;
             flex-direction: column;
-            padding: 10px;
+            padding: 20px;
 
             .titleWrapper {
                 display: flex;
@@ -33,18 +32,17 @@ $dialog-border-radius: 10px;
                 .title {
                     margin: 0;
                     margin-left: 10px;
+                    max-width: 300px;
                 }
             }
         }
 
-        .form {
-            .btn {
-                @include button();
-            }
+        .confirmBtn {
+            @include button($red);
+            margin-left: 0;
         }
-    }
-
-    &:focus {
-        outline: none;
+        .btn {
+            @include button();
+        }
     }
 }

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { alphaNumSample } from '../utils/codeGen';
 import { Collection } from 'mongodb';
 import URLModel from '../models/urlModel';
+import User from '../models/userModel';
 
 const getUrlByCode = async (req: Request, res: Response) => {
     const { code } = req.params;
@@ -22,9 +23,9 @@ const getUrlByCode = async (req: Request, res: Response) => {
 
 const shortenURL = async (req: Request, res: Response) => {
     const { original_url, created_by } = req.body;
-    const urlsCollection = req.app.get('urlsCollection') as Collection<URLModel>;
 
     try {
+        const urlsCollection = req.app.get('urlsCollection') as Collection<URLModel>;
         new URL(original_url); // Validate URL
 
         const res1 = await urlsCollection.findOne({ original_url: original_url });
@@ -51,6 +52,30 @@ const shortenURL = async (req: Request, res: Response) => {
     }
 };
 
+const deleteURL = async (req: Request, res: Response) => {
+    const { code } = req.params;
+    const user = res.locals.user as User;
+
+    if (!user.email) return res.status(401).json({ message: `Unauthorized` });
+
+    try {
+        const urlsCollection = req.app.get('urlsCollection') as Collection<URLModel>;
+
+        const url = await urlsCollection.findOne({ code: code });
+        if (!url) return res.status(404).json({ message: `URL not found` });
+        if (url.creator_email !== user.email) return res.status(401).json({ message: `Unauthorized` });
+
+        const result = await urlsCollection.deleteOne({ code: code });
+
+        if (result.acknowledged === false) return res.status(500).json({ message: `Error deleting URL` });
+
+        return res.status(200).json({ message: `URL deleted` });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: `Server Error` });
+    }
+};
+
 const generateShortCode = async (urlsCollection: Collection<URLModel>) => {
     let count = 0;
     while (true) {
@@ -67,4 +92,4 @@ const generateShortCode = async (urlsCollection: Collection<URLModel>) => {
     }
 };
 
-export default { shortenURL, getUrlByCode };
+export default { shortenURL, getUrlByCode, deleteURL };

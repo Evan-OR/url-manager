@@ -1,5 +1,4 @@
 import DeleteIcon from '../Icons/DeleteIcon';
-// import EditIcon from '../Icons/EditIcon';
 import style from './urlDetailsDisplay.module.scss';
 
 type ShortenedUrl = {
@@ -12,9 +11,10 @@ type ShortenedUrl = {
 };
 type UrlDetailsDisplayProps = {
     url: ShortenedUrl;
+    openDialog: (e: React.MouseEvent<HTMLDivElement>, code: string) => void;
 };
 
-function UrlDetailsDisplay({ url }: UrlDetailsDisplayProps) {
+function UrlDetailsDisplay({ url, openDialog }: UrlDetailsDisplayProps) {
     const getTimeSinceCreation = (date: Date) => {
         date = new Date(date);
         const now = new Date();
@@ -48,13 +48,16 @@ function UrlDetailsDisplay({ url }: UrlDetailsDisplayProps) {
     return (
         <details className={style.detailsWrapper}>
             <summary className={style.titleWrapper}>
-                <div className={style.title}>{url.title}</div>
+                <div className={style.title}>
+                    {url.title ? url.title : `Link for ${new URL(url.original_url).hostname}`}
+                </div>
 
                 <div className={style.titleInfo}>
-                    <div title="Clicks">13K</div>
+                    <div title="Clicks">{Math.round(Math.random() * 50)}K</div>
                     <div className={style.created}>{getTimeSinceCreation(url.date_created)}</div>
-                    {/* <EditIcon styleClass={style.icon} /> */}
-                    <DeleteIcon styleClass={style.deleteIcon} />
+                    <div className={style.iconWrapper} onClick={(e) => openDialog(e, url.code)}>
+                        <DeleteIcon styleClass={style.deleteIcon} />
+                    </div>
                 </div>
             </summary>
 
@@ -62,7 +65,7 @@ function UrlDetailsDisplay({ url }: UrlDetailsDisplayProps) {
                 <div>
                     <b>Shortened URL:</b>{' '}
                     <a target="_blank" href={short_url}>
-                        {short_url}
+                        shortUrl.com/{url.code}
                     </a>
                 </div>
                 <div>

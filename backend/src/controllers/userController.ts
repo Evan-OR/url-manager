@@ -73,7 +73,7 @@ const login = async (req: Request, res: Response) => {
 };
 
 const autoLogin = async (req: Request, res: Response) => {
-    const user = req.app.get('user');
+    const user = res.locals.user as User;
     res.status(200).json({ message: 'Auto Login Successful', user: user });
 };
 
