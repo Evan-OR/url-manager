@@ -65,7 +65,7 @@ function UrlDetailsDisplay({ url, openDialog }: UrlDetailsDisplayProps) {
                 <div>
                     <b>Shortened URL:</b>{' '}
                     <a target="_blank" href={short_url}>
-                        {short_url}
+                        shortUrl.com/{url.code}
                     </a>
                 </div>
                 <div>
