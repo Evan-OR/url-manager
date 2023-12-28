@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import { Collection } from 'mongodb';
 import URLModel from '../models/urlModel';
+import User from '../models/userModel';
 
 const getUrlsByCreatorEmail = async (req: Request, res: Response) => {
-    const { email } = req.app.get('user');
+    const { email } = res.locals.user as User;
     const urlsCollection = req.app.get('urlsCollection') as Collection<URLModel>;
 
     if (!email) return res.status(403).json({ message: 'No email provided' });
