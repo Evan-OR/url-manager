@@ -14,6 +14,7 @@ function ConfirmationDialog({ dialogRef, deleteLink }: ConfirmationDialogProps) 
         const successfullyDeleted = await deleteLink(e);
         if (successfullyDeleted) {
             dialogRef.current?.close();
+            return;
         }
 
         setErrorMessage('Error deleting link');
