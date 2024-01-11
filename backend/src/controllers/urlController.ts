@@ -28,20 +28,18 @@ const shortenURL = async (req: Request, res: Response) => {
         const urlsCollection = req.app.get('urlsCollection') as Collection<URLModel>;
         new URL(original_url); // Validate URL
 
-        const res1 = await urlsCollection.findOne({ original_url: original_url });
-        if (res1) return res.status(403).json({ message: 'URL Already shortened', shortened_url: res1 });
-
         const code = await generateShortCode(urlsCollection);
         const doc: URLModel = {
             code,
             original_url: original_url,
             creator_email: created_by,
             date_created: new Date(),
+            title: '',
         };
-        const res2 = await urlsCollection.insertOne(doc);
-        if (!res2.acknowledged) throw new Error();
+        const result = await urlsCollection.insertOne(doc);
+        if (!result.acknowledged) throw new Error();
 
-        doc._id = res2.insertedId;
+        doc._id = result.insertedId;
         res.status(200).json({
             message: `${created_by} creating shortened url for ${original_url}`,
             shortened_url: doc,
@@ -76,6 +74,33 @@ const deleteURL = async (req: Request, res: Response) => {
     }
 };
 
+const updateUrl = async (req: Request, res: Response) => {
+    const { code } = req.params;
+    const data = req.body;
+
+    try {
+        const urlsCollection = req.app.get('urlsCollection') as Collection<URLModel>;
+
+        const result = await urlsCollection.updateOne(
+            { code: code },
+            {
+                $set: {
+                    ...data,
+                },
+            }
+        );
+
+        if (result.acknowledged === false) return res.status(500).json({ message: `Error updating URL` });
+        if (!result.matchedCount) return res.status(404).json({ message: `URL code (${code}) not found` });
+
+        return res.status(200).json({ message: `URL updated` });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: `Server Error` });
+    }
+};
+
+// Helper Functions
 const generateShortCode = async (urlsCollection: Collection<URLModel>) => {
     let count = 0;
     while (true) {
@@ -92,4 +117,4 @@ const generateShortCode = async (urlsCollection: Collection<URLModel>) => {
     }
 };
 
-export default { shortenURL, getUrlByCode, deleteURL };
+export default { shortenURL, getUrlByCode, deleteURL, updateUrl };

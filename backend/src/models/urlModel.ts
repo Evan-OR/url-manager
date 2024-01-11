@@ -6,6 +6,7 @@ interface URLModel {
     original_url: string;
     creator_email: string;
     date_created: Date;
+    title: string;
 }
 
 export default URLModel;

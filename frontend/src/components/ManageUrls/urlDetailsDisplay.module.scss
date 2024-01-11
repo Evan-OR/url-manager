@@ -29,6 +29,10 @@ $pad: 10px 20px;
     overflow: hidden;
     border-radius: 4px;
 
+    user-select: none;
+
+    cursor: pointer;
+
     .titleWrapper {
         font-weight: bold;
         display: flex;
@@ -36,7 +40,52 @@ $pad: 10px 20px;
 
         padding: $pad;
 
-        cursor: pointer;
+        .titleform {
+            display: flex;
+            align-items: center;
+
+            .titleInput {
+                background-color: rgba(0, 0, 0, 0);
+                color: $bg-color;
+                font-weight: bold;
+                font-size: 1.05rem;
+                border: solid black 2px;
+                border-radius: 4px;
+                outline: none;
+
+                &:disabled {
+                    border: solid rgba(0, 0, 0, 0) 2px;
+                    pointer-events: none;
+                    user-select: none;
+                }
+            }
+
+            .iconWrapper {
+                display: flex;
+                align-items: center;
+                .icon {
+                    @include icon(22px, $primary);
+                    opacity: 0;
+                    margin: 0 10px;
+                }
+            }
+
+            .confirmCancelIcons {
+                display: flex;
+                align-items: center;
+
+                .iconWrapper {
+                    .confirm {
+                        @include icon(22px, $green);
+                        margin: 0 3px;
+                    }
+                    .cancel {
+                        @include icon(22px, $red);
+                        margin: 0 3px;
+                    }
+                }
+            }
+        }
     }
     .titleInfo {
         display: flex;
@@ -75,6 +124,14 @@ $pad: 10px 20px;
         .titleInfo {
             .deleteIcon {
                 opacity: 1;
+            }
+        }
+
+        .titleWrapper {
+            .titleform {
+                .icon {
+                    opacity: 1;
+                }
             }
         }
     }

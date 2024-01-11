@@ -82,7 +82,7 @@ function ManageUrls() {
             </div>
             <ConfirmationDialog dialogRef={dialogRef} deleteLink={deleteLink} />
             {data.map((url) => (
-                <UrlDetailsDisplay key={url._id} url={url} openDialog={openDialog} />
+                <UrlDetailsDisplay key={url._id} linkData={url} openDialog={openDialog} />
             ))}
         </>
     );

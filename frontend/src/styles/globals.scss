@@ -1,6 +1,7 @@
 $primary: #ff9191;
 $bg-color: #242424;
 $red: #d14848;
+$green: #48d15f;
 
 @mixin button($color: white) {
     background-color: rgba(255, 255, 255, 0);
@@ -18,5 +19,12 @@ $red: #d14848;
         cursor: pointer;
     }
 }
-// another button but with an optional colour parameter
-// if no colour is passed, the default colour is used
+
+@mixin icon($icon-size: 22px, $hover-color: $bg-color) {
+    fill: $bg-color;
+    width: $icon-size;
+    height: $icon-size;
+    &:hover {
+        fill: $hover-color;
+    }
+}

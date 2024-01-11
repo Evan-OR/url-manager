@@ -6,6 +6,7 @@ interface User {
     email: string;
     password: string;
     registration_date: Date;
+    account_type: string;
 }
 
 export default User;

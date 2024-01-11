@@ -29,6 +29,7 @@ const register = async (req: Request, res: Response) => {
             email: email,
             password: hashedPassword,
             registration_date: new Date(),
+            account_type: 'free',
         };
 
         const result = await usersCollection.insertOne(user);
