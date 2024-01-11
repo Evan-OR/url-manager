@@ -28,9 +28,6 @@ const shortenURL = async (req: Request, res: Response) => {
         const urlsCollection = req.app.get('urlsCollection') as Collection<URLModel>;
         new URL(original_url); // Validate URL
 
-        const res1 = await urlsCollection.findOne({ original_url: original_url });
-        if (res1) return res.status(403).json({ message: 'URL Already shortened', shortened_url: res1 });
-
         const code = await generateShortCode(urlsCollection);
         const doc: URLModel = {
             code,
@@ -39,10 +36,10 @@ const shortenURL = async (req: Request, res: Response) => {
             date_created: new Date(),
             title: '',
         };
-        const res2 = await urlsCollection.insertOne(doc);
-        if (!res2.acknowledged) throw new Error();
+        const result = await urlsCollection.insertOne(doc);
+        if (!result.acknowledged) throw new Error();
 
-        doc._id = res2.insertedId;
+        doc._id = result.insertedId;
         res.status(200).json({
             message: `${created_by} creating shortened url for ${original_url}`,
             shortened_url: doc,
