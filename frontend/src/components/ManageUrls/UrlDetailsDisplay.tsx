@@ -1,4 +1,5 @@
 import DeleteIcon from '../Icons/DeleteIcon';
+import UrlDisplayTitle from './UrlDisplayTitle';
 import style from './urlDetailsDisplay.module.scss';
 
 type ShortenedUrl = {
@@ -10,11 +11,11 @@ type ShortenedUrl = {
     title: string;
 };
 type UrlDetailsDisplayProps = {
-    url: ShortenedUrl;
+    linkData: ShortenedUrl;
     openDialog: (e: React.MouseEvent<HTMLDivElement>, code: string) => void;
 };
 
-function UrlDetailsDisplay({ url, openDialog }: UrlDetailsDisplayProps) {
+function UrlDetailsDisplay({ linkData, openDialog }: UrlDetailsDisplayProps) {
     const getTimeSinceCreation = (date: Date) => {
         date = new Date(date);
         const now = new Date();
@@ -43,19 +44,17 @@ function UrlDetailsDisplay({ url, openDialog }: UrlDetailsDisplayProps) {
         return `${day > 10 ? day : '0' + day}/${month > 10 ? month : '0' + month}/${year.toString().slice(2)}`;
     };
 
-    const short_url = `${import.meta.env.VITE_URL}?code=${url.code}`;
+    const short_url = `${import.meta.env.VITE_URL}?code=${linkData.code}`;
 
     return (
         <details className={style.detailsWrapper}>
             <summary className={style.titleWrapper}>
-                <div className={style.title}>
-                    {url.title ? url.title : `Link for ${new URL(url.original_url).hostname}`}
-                </div>
+                <UrlDisplayTitle linkData={linkData} />
 
                 <div className={style.titleInfo}>
                     <div title="Clicks">{Math.round(Math.random() * 50)}K</div>
-                    <div className={style.created}>{getTimeSinceCreation(url.date_created)}</div>
-                    <div className={style.iconWrapper} onClick={(e) => openDialog(e, url.code)}>
+                    <div className={style.created}>{getTimeSinceCreation(linkData.date_created)}</div>
+                    <div className={style.iconWrapper} onClick={(e) => openDialog(e, linkData.code)}>
                         <DeleteIcon styleClass={style.deleteIcon} />
                     </div>
                 </div>
@@ -65,17 +64,17 @@ function UrlDetailsDisplay({ url, openDialog }: UrlDetailsDisplayProps) {
                 <div>
                     <b>Shortened URL:</b>{' '}
                     <a target="_blank" href={short_url}>
-                        shortUrl.com/{url.code}
+                        shortUrl.com/{linkData.code}
                     </a>
                 </div>
                 <div>
                     <b>Original URL:</b>{' '}
-                    <a target="_blank" href={url.original_url}>
-                        {url.original_url}
+                    <a target="_blank" href={linkData.original_url}>
+                        {linkData.original_url}
                     </a>
                 </div>
                 <div>
-                    <b>Date Created:</b> {convertDateFormat(url.date_created)}
+                    <b>Date Created:</b> {convertDateFormat(linkData.date_created)}
                 </div>
             </div>
         </details>
