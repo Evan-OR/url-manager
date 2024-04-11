@@ -115,6 +115,12 @@ function UrlDisplayTitle(props: UrlDisplayTitleProps) {
     };
 
     useEffect(() => {
+        if (!disabled) {
+            inputRef.current?.focus();
+        }
+    }, [disabled]);
+
+    useEffect(() => {
         if (!inputRef.current) return;
         setInputWidth(
             inputRef.current.value.length + 1 > 13 ? (inputRef.current.value.length + 1) * 10 + 'px' : '120px'
