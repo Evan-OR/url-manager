@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import DeleteIcon from '../Icons/DeleteIcon';
 import UrlDisplayTitle from './UrlDisplayTitle';
 import style from './urlDetailsDisplay.module.scss';
+import { getAnalytics } from '../../utils/requests';
 
 type ShortenedUrl = {
     _id: string;
@@ -44,10 +46,14 @@ function UrlDetailsDisplay({ linkData, openDialog }: UrlDetailsDisplayProps) {
         return `${day > 10 ? day : '0' + day}/${month > 10 ? month : '0' + month}/${year.toString().slice(2)}`;
     };
 
-    const short_url = `${import.meta.env.VITE_URL}?code=${linkData.code}`;
+    const short_url = `${import.meta.env.VITE_URL}/${linkData.code}`;
+    const thing = async () => {
+        const thingy = await getAnalytics(linkData._id);
+        console.log(thingy);
+    };
 
     return (
-        <details className={style.detailsWrapper}>
+        <details className={style.detailsWrapper} onClick={thing}>
             <summary className={style.titleWrapper}>
                 <UrlDisplayTitle linkData={linkData} />
 

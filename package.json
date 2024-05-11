@@ -5,7 +5,6 @@
     "scripts": {
         "start:frontend": "cd frontend && npm run dev",
         "start:backend": "cd backend && npm start",
-        "start:redirect": "cd redirect_service && .venv\\Scripts\\activate && func start",
-        "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\" \"npm run start:redirect\""
+        "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\""
     }
 }
