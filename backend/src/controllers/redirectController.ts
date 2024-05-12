@@ -1,32 +1,29 @@
 import { Request, Response } from 'express';
-import { Collection, ObjectId } from 'mongodb';
+import { Collection } from 'mongodb';
 import URLModel from '../models/urlModel';
-import AnalyticsModel from '../models/analyticsModel';
 
 const redirect = async (req: Request, res: Response) => {
     const { code } = req.params;
     if (!code) return res.status(400).json({ message: 'Node code passed!' });
 
-    const referer = req.headers.referer;
-
     try {
+        const referer = req.headers.referer ? new URL(req.headers.referer).hostname : 'none';
         const urlsCollection = req.app.get('urlsCollection') as Collection<URLModel>;
-        const analyticsCollection = req.app.get('analyticsCollection') as Collection<AnalyticsModel>;
 
-        const result = await urlsCollection.findOne({ code });
-        console.log(result.original_url);
-        analyticsCollection.updateOne(
-            { url_data: new ObjectId(result._id) },
+        const result = await urlsCollection.findOneAndUpdate(
+            { code },
             {
-                $push: { [`referer_data.${referer}`]: new Date() },
-                $inc: { total_clicks: 1 },
-                $set: { creator_email: result['creator_email'] },
-                $setOnInsert: { date_create: new Date() },
+                $inc: { 'analytics.total_clicks': 1 },
+                $push: { [`analytics.referer_data.${referer}`]: new Date() },
             },
-            { upsert: true }
+            { upsert: true, returnDocument: 'after' }
         );
+
         return res.redirect(301, result.original_url);
-    } catch (e) {}
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
 };
 
 export default { redirect };

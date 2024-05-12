@@ -6,7 +6,7 @@ import urlRoutes from './routes/urlRouter';
 import urlsRouter from './routes/urlsRouter';
 import analyticsRouter from './routes/analyticsRouter';
 import redirectRouter from './routes/redirectRouter';
-import { Collection, Db } from 'mongodb';
+import { Collection } from 'mongodb';
 import getDatabaseConnection from './db';
 import URLModel from './models/urlModel';
 
