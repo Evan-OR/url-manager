@@ -4,7 +4,6 @@ import 'dotenv/config';
 import userRouter from './routes/userRouter';
 import urlRoutes from './routes/urlRouter';
 import urlsRouter from './routes/urlsRouter';
-import analyticsRouter from './routes/analyticsRouter';
 import redirectRouter from './routes/redirectRouter';
 import { Collection } from 'mongodb';
 import getDatabaseConnection from './db';
@@ -21,8 +20,6 @@ import URLModel from './models/urlModel';
         app.use('/api/urls', urlsRouter);
         app.use('/api/user', userRouter);
         app.use('/api/redirect', redirectRouter);
-
-        app.use('/api/analytics', analyticsRouter);
 
         const { usersCollection, urlsCollection, analyticsCollection } = await getDatabaseConnection(
             process.env.MONGODB
