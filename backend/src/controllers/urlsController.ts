@@ -17,7 +17,7 @@ const getUrlsByCreatorEmail = async (req: Request, res: Response) => {
             .skip(amountPerPage * pageIndex)
             .limit(amountPerPage);
         const docs = await cursor.toArray();
-        res.status(200).json(docs);
+        return res.status(200).json(docs);
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: 'Server Error' });
