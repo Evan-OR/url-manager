@@ -1,4 +1,4 @@
-@use '../../styles/globals.scss' as *;
+@use '../../styles/globals.module.scss' as *;
 
 $pad: 10px 20px;
 
@@ -56,6 +56,7 @@ $pad: 10px 20px;
                 &:disabled {
                     border: solid rgba(0, 0, 0, 0) 2px;
                     pointer-events: none;
+                    -webkit-user-select: none;
                     user-select: none;
                 }
             }
