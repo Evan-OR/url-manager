@@ -14,3 +14,20 @@ export type Analytics = {
     };
     total_clicks: number;
 };
+
+export type URLData = {
+    _id?: object;
+    code: string;
+    original_url: string;
+    creator_email: string;
+    date_created: Date;
+    title: string;
+    analytics?: {
+        total_clicks: number;
+        referer_data: RefererData;
+    };
+};
+
+export type RefererData = {
+    [key: string]: number[];
+};
