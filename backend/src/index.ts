@@ -3,9 +3,11 @@ import 'dotenv/config';
 
 import userRouter from './routes/userRouter';
 import urlRoutes from './routes/urlRouter';
-import { Db } from 'mongodb';
-import getDatabaseConnection from './db';
 import urlsRouter from './routes/urlsRouter';
+import redirectRouter from './routes/redirectRouter';
+import { Collection } from 'mongodb';
+import getDatabaseConnection from './db';
+import URLModel from './models/urlModel';
 
 (async () => {
     try {
@@ -17,15 +19,19 @@ import urlsRouter from './routes/urlsRouter';
         app.use('/api/url', urlRoutes);
         app.use('/api/urls', urlsRouter);
         app.use('/api/user', userRouter);
+        app.use('/api/redirect', redirectRouter);
 
-        const { usersCollection, urlsCollection } = await getDatabaseConnection(process.env.MONGODB);
+        const { usersCollection, urlsCollection, analyticsCollection } = await getDatabaseConnection(
+            process.env.MONGODB
+        );
         app.set('usersCollection', usersCollection);
         app.set('urlsCollection', urlsCollection);
+        app.set('analyticsCollection', analyticsCollection);
 
         app.get('/api', async (req, res) => {
-            const db = app.get('db') as Db;
-            const doc = await db.collection('shortened_urls').findOne({}, { projection: { _id: 0 } });
-            res.status(200).json(doc);
+            const urlsCollection = req.app.get('urlsCollection') as Collection<URLModel>;
+            const result = await urlsCollection.findOne();
+            res.status(200).json(result);
         });
 
         app.listen(port, () => {

@@ -6,6 +6,7 @@ const getDatabaseConnection = async (connectionString: string) => {
     return {
         usersCollection: client.db('url_management').collection('users'),
         urlsCollection: client.db('url_management').collection('shortened_urls'),
+        analyticsCollection: client.db('url_management').collection('analytics'),
     };
 };
 

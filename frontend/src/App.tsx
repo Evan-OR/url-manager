@@ -9,6 +9,7 @@ import URLAnalytics from './components/URLAnalytics/URLAnalytics';
 import NotFoundPage from './components/NotFoundPage/404Page';
 import { UserContext } from './context/UserContext';
 import CreatedLinkDisplay from './components/CreatedLinkDisplay/CreatedLinkDisplay';
+import { RequireAuth } from './components/Utils/RequireAuth';
 
 function App() {
     const userContext = useContext(UserContext);
@@ -40,7 +41,14 @@ function App() {
         <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/auth" element={<RegisterForm />} />
-            <Route path="/manage" element={<ManageUrls />} />
+            <Route
+                path="/manage"
+                element={
+                    <RequireAuth>
+                        <ManageUrls />
+                    </RequireAuth>
+                }
+            />
             <Route path="/analytics" element={<URLAnalytics />} />
             <Route path="/url/:urlCode" element={<CreatedLinkDisplay />} />
             <Route path="*" element={<NotFoundPage />} />

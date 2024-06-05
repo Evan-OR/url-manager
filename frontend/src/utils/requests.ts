@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie';
+
 type AuthenticationType = 'Register' | 'Login';
 type AuthenticationData = {
     email: string;
@@ -24,4 +26,22 @@ export const authenticateUser = async (
 
     const json = await res.json();
     return json;
+};
+
+export const getAnalytics = async (url_id: string) => {
+    try {
+        const token = Cookies.get('jwt');
+        const res = await fetch(`/api/analytics/${url_id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const json = await res.json();
+
+        return json;
+    } catch (e) {
+        return e;
+    }
 };
