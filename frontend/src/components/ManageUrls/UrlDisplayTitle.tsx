@@ -5,28 +5,20 @@ import ConfirmIcon from '../Icons/ConfirmIcon';
 import CancelIcon from '../Icons/CancelIcon';
 import { UserContext } from '../../context/UserContext';
 import Cookies from 'js-cookie';
-
-type ShortenedUrl = {
-    _id: string;
-    code: string;
-    original_url: string;
-    creator_email: string;
-    date_created: Date;
-    title: string;
-};
+import { URLData } from '../../utils/types';
 
 type UrlDisplayTitleProps = {
-    linkData: ShortenedUrl;
+    urlData: URLData;
 };
 
 // YO CLEAN THIS SHIT UP! HOLY FUCK!
 function UrlDisplayTitle(props: UrlDisplayTitleProps) {
-    const { linkData } = props;
+    const { urlData } = props;
 
     const userContext = useContext(UserContext);
 
     const [title, setTitle] = useState(
-        linkData.title ? linkData.title : `Link for ${new URL(linkData.original_url).hostname}`
+        urlData.title ? urlData.title : `Link for ${new URL(urlData.original_url).hostname}`
     );
     const [inputValue, setInputValue] = useState(title);
     const [disabled, setDisabled] = useState(true);
@@ -56,7 +48,7 @@ function UrlDisplayTitle(props: UrlDisplayTitleProps) {
             cleanedString = cleanedString.replace(/\s{2,}/g, ' ');
             cleanedString = cleanedString.trim();
 
-            const res = await fetch(`api/url/${linkData.code}`, {
+            const res = await fetch(`api/url/${urlData.code}`, {
                 method: 'PATCH',
                 headers: {
                     Authorization: `Bearer ${Cookies.get('jwt')}`,

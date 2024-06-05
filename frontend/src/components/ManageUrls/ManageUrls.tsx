@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Cookies from 'js-cookie';
 import NavBar from '../NavBar/NavBar';
 import UrlDetailsDisplay from './UrlDetailsDisplay';
 import style from './urlDetailsDisplay.module.scss';
 import ConfirmationDialog from './ConfirmationDialog';
+import { NextPreviousPage } from './NextPreviousPage';
 
 type ShortenedUrl = {
     _id: string;
@@ -18,20 +19,28 @@ function ManageUrls() {
     const dialogRef = useRef<HTMLDialogElement>(null);
 
     const [data, setData] = useState<ShortenedUrl[]>([]);
+    const [pageIndex, setPageIndex] = useState<number>(0);
     const [deleteCode, setDeleteCode] = useState<string>('');
 
-    const getShortenedURLs = async () => {
-        const res = await fetch(`/api/urls`, {
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${Cookies.get('jwt')}`,
-            },
-        });
+    // memoize the function to prevent unnecessary re-renders
 
-        const json = await res.json();
-        console.log(json);
-        setData(json);
-    };
+    const getShortenedURLs = useCallback(
+        async (pageIndex: number = 0) => {
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            const res = await fetch(`/api/urls?pageIndex=${pageIndex}`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${Cookies.get('jwt')}`,
+                },
+            });
+
+            const json = await res.json();
+            console.log(json);
+            setData(json);
+            setPageIndex(pageIndex);
+        },
+        [pageIndex]
+    );
 
     const openDialog = (e: React.MouseEvent<HTMLDivElement>, code: string) => {
         e.preventDefault();
@@ -82,8 +91,9 @@ function ManageUrls() {
             </div>
             <ConfirmationDialog dialogRef={dialogRef} deleteLink={deleteLink} />
             {data.map((url) => (
-                <UrlDetailsDisplay key={url._id} linkData={url} openDialog={openDialog} />
+                <UrlDetailsDisplay key={url._id} urlData={url} openDialog={openDialog} />
             ))}
+            <NextPreviousPage pageIndex={pageIndex} setPageIndex={getShortenedURLs} />
         </>
     );
 }
