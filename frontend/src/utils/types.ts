@@ -16,7 +16,7 @@ export type Analytics = {
 };
 
 export type URLData = {
-    _id?: object;
+    _id: string;
     code: string;
     original_url: string;
     creator_email: string;

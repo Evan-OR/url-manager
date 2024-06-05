@@ -5,20 +5,12 @@ import UrlDetailsDisplay from './UrlDetailsDisplay';
 import style from './urlDetailsDisplay.module.scss';
 import ConfirmationDialog from './ConfirmationDialog';
 import { NextPreviousPage } from './NextPreviousPage';
-
-type ShortenedUrl = {
-    _id: string;
-    code: string;
-    original_url: string;
-    creator_email: string;
-    date_created: Date;
-    title: string;
-};
+import { URLData } from '@frontend/src/utils/types';
 
 function ManageUrls() {
     const dialogRef = useRef<HTMLDialogElement>(null);
 
-    const [data, setData] = useState<ShortenedUrl[]>([]);
+    const [data, setData] = useState<URLData[]>([]);
     const [pageIndex, setPageIndex] = useState<number>(0);
     const [deleteCode, setDeleteCode] = useState<string>('');
 

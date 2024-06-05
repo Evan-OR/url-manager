@@ -3,7 +3,8 @@ import style from './registerFrom.module.scss';
 import FormInput from './FormInput';
 import Cookies from 'js-cookie';
 import FormToggle from './FormToggle';
-import { UserContext } from '../../context/UserContext';
+import { UserContext } from '@frontend/src/context/UserContext';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type RegistrationErrors = {
     username?: string;
@@ -15,6 +16,8 @@ type FormType = 'Register' | 'Login';
 
 function RegisterForm() {
     const userContext = useContext(UserContext);
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const usernameRef = useRef<HTMLInputElement>(null);
     const emailRef = useRef<HTMLInputElement>(null);
@@ -28,6 +31,8 @@ function RegisterForm() {
     const [passwordError, setPasswordError] = useState(false);
 
     const [disableSubmitButton, setDisableSubmitButton] = useState(false);
+
+    const redirectPath = location.state?.path || '/';
 
     const requestHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -64,6 +69,7 @@ function RegisterForm() {
         Cookies.set('jwt', json.token);
         userContext?.setUser(json.user);
         setDisableSubmitButton(false);
+        navigate(redirectPath, { replace: true });
     };
 
     const toggleFormType = () => {
